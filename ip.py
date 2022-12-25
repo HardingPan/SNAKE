@@ -52,6 +52,19 @@ def skin_threshold(roi):
     return res
 
 
+###############################################
+# 形态学处理函数
+# 输入：提取过皮肤以后的图像（存在瑕疵的干扰）
+# 输出：排除大部分瑕疵后的图像
+###############################################
+def morphology(img_skin):
+    # k = np.ones((16, 16), np.uint8)
+    k = cv.getStructuringElement(cv.MORPH_RECT, (20, 20), None)
+    img_erode = cv.erode(img_skin, k, 2)
+    img_dilate = cv.dilate(img_erode, k, 1)
+
+    return img_dilate
+
 # 逐个图片显示
 # if __name__ == '__main__':
 #     path = 'img/1.jpg'
@@ -78,14 +91,21 @@ cap.set(cv.CAP_PROP_FRAME_WIDTH, width)
 cap.set(cv.CAP_PROP_FRAME_HEIGHT, height)
 
 if __name__ == '__main__':
+
     while 1:
+        # 读取摄像头画面
         flag, frame = cap.read()
-        img, _ = crop(frame, 0, 0, width, height)
+        # 对摄像头画面进行截取
+        img, img_origin = crop(frame, 0, 0, width, height)
+        # 对图像进行高斯模糊
+        img = cv.GaussianBlur(img, (3, 3), 0)
+        # 进行皮肤提取
         img_ellipse = skin_ellipse(img)
-        img_threshold = skin_threshold(img)
+
+        img_morphology = morphology(img_ellipse)
 
         cv.imshow("ellipse", img_ellipse)
-
+        cv.imshow("morphology", img_morphology)
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
             break
