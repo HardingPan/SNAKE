@@ -11,9 +11,9 @@ def fourierDesciptor(res):
     dst = cv2.Laplacian(gray, cv2.CV_16S, ksize=3)
     Laplacian = cv2.convertScaleAbs(dst)
     contour = find_contours(Laplacian)  # 提取轮廓点坐标
-    contour_array = contour[0][:, 0, :]  # 注意这里只保留区域面积最大的轮廓点坐标
+    contour_array = contour[:, 0, :]  # 注意这里只保留区域面积最大的轮廓点坐标
     ret_np = np.ones(dst.shape, np.uint8)  # 创建黑色幕布
-    ret = cv2.drawContours(ret_np, contour[0], -1, (255, 255, 255), 1)  # 绘制白色轮廓
+    ret = cv2.drawContours(ret_np, contour, -1, (255, 255, 255), 1)  # 绘制白色轮廓
     contours_complex = np.empty(contour_array.shape[:-1], dtype=complex)
     contours_complex.real = contour_array[:, 0]  # 横坐标作为实数部分
     contours_complex.imag = contour_array[:, 1]  # 纵坐标作为虚数部分
@@ -24,12 +24,18 @@ def fourierDesciptor(res):
     return ret, descirptor_in_use
 
 
+def cnt_area(cnt):
+    area = cv2.contourArea(cnt)
+    return area
+
+
 def find_contours(Laplacian):
-    # binaryimg = cv2.Canny(res, 50, 200) #二值化，canny检测
-    h = cv2.findContours(Laplacian, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # 寻找轮廓
-    contour = h[1]
-    contour = sorted(contour, key=cv2.contourArea, reverse=True)  # 对一系列轮廓点坐标按它们围成的区域面积进行排序
-    return contour
+    contours, hierarchy = cv2.findContours(Laplacian, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # 寻找轮廓
+    area = []
+    for i in range(len(contours)):
+        area.append(cv2.contourArea(contours[i]))
+    max = np.argmax(np.array(area))
+    return contours[max]
 
 
 # 截短傅里叶描述子

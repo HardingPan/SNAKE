@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+import fourierDescriptor as fd
 
 
 ###############################################
@@ -59,9 +60,11 @@ def skin_threshold(roi):
 ###############################################
 def morphology(img_skin):
     # k = np.ones((16, 16), np.uint8)
-    k = cv.getStructuringElement(cv.MORPH_RECT, (20, 20), None)
-    img_erode = cv.erode(img_skin, k, 2)
-    img_dilate = cv.dilate(img_erode, k, 2)
+    k = cv.getStructuringElement(cv.MORPH_RECT, (9, 9), None)
+    img_erode = cv.erode(img_skin, k, 1)
+    img_dilate = cv.dilate(img_erode, k, 1)
+    img_erode = cv.erode(img_dilate, k, 1)
+    img_dilate = cv.dilate(img_erode, k, 1)
 
     return img_dilate
 
@@ -106,8 +109,11 @@ if __name__ == '__main__':
 
         img_morphology = morphology(img_ellipse)
 
+        img_fourier, _ = fd.fourierDesciptor(img_morphology)
+
         cv.imshow("ellipse", img_ellipse)
         cv.imshow("morphology", img_morphology)
+        cv.imshow("fourier", img_fourier)
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
             break
