@@ -61,17 +61,19 @@ def morphology(img_skin):
     # k = np.ones((16, 16), np.uint8)
     k = cv.getStructuringElement(cv.MORPH_RECT, (20, 20), None)
     img_erode = cv.erode(img_skin, k, 2)
-    img_dilate = cv.dilate(img_erode, k, 1)
+    img_dilate = cv.dilate(img_erode, k, 2)
 
     return img_dilate
+
 
 # 逐个图片显示
 # if __name__ == '__main__':
 #     path = 'img/1.jpg'
 #     img = cv.imread(path)
 #     img_1, img_2 = crop(img, 150, 400, 500, 500)
+#     img_1 = cv.GaussianBlur(img_1, (3, 3), 0)
 #     img_3 = skin_ellipse(img_1)
-#     img_4 = skin_threshold(img_1)
+#     img_4 = morphology(img_3)
 #     plt.figure()
 #     plt.subplot(2, 2, 1)
 #     plt.imshow(img_2[:, :, ::-1])
