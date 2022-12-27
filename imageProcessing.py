@@ -109,11 +109,12 @@ if __name__ == '__main__':
 
         img_morphology = morphology(img_ellipse)
 
-        img_fourier, _ = fd.fourierDesciptor(img_morphology)
+        img_fourier, points = fd.fourierDesciptor(img_morphology)
 
         cv.imshow("ellipse", img_ellipse)
         cv.imshow("morphology", img_morphology)
         cv.imshow("fourier", img_fourier)
+
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
             break
