@@ -4,17 +4,21 @@
 日期：2022.12  
 ####################  
   
-  
-【文件说明】  
+【主要参考资料】  
+https://blog.csdn.net/qq_41562704/article/details/88975569    
+   
+【主要功能】    
+识别手势（上下左右），并发送串口信号   
+【文件说明】   
+main.py是主程序，可以直接使用   
 imageProcessing.py主要负责图像的预处理  
-fourierDescriptor.py主要负责特征的提取  
+fourierDescriptor.py主要负责特征的提取   
+classfy.py主要用于对傅里叶特征进行分类、识别   
+modelTraining.py主要用于对数据集进行训练（训练生成的模型在model文件夹内） 
+imgGather.py主要用于数据集的制作（注：推荐使用1_2,4_39这种i_j的形式去储存数据集）  
   
-【Python库说明】  
-opencv-python，numpy，matplotlib，  
-（以上库的版本没有具体要求）  
-  
-  
-【图像处理具体信息】  
+   
+【图像处理具体信息】    
 主要步骤为：  
 1，滤波去噪（感觉可有可无）  
 2，皮肤检测（实际使用中发现skin_ellipse函数的效果更好）   
@@ -22,5 +26,12 @@ opencv-python，numpy，matplotlib，
    
 【特征提取具体信息】   
 参考连接：https://github.com/timfeirg/Fourier-Descriptors   
+   
+【数据集制作】     
+数据集制作可以直接通过键盘进行保存，路径都可以自己设置，本项目是同时保存傅里叶特征向量和图像的，使用特征向量去训练的优势是训练速度快，缺点是效果差，使用图像去训练的话更推荐使用yolo等网络去跑。   
+   
+【模型训练】   
+我使用的是傅里叶变换特征向量作为数据集，而不是得到的边缘轮廓二值图像。本项目的数据集制作（imgGater）将特征向量（txt格式）和图像（png格式）同时产生并保存在不同的文件夹内了（详见dataset文件夹），但是想要直接使用本项目的话，请把特征向量保存在feature（训练集）和test_feature文件夹内，即可直接进行训练。     
 
-  
+【特征识别】   
+我在实际测试的时候主要使用knn识别的结果，svm分类器的效果并不好（应该是训练不到位，数据集过少）   
