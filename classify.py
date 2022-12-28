@@ -102,9 +102,9 @@ def test_SVM(clf,N):
 
 
 def test_fd(fd_test):
-	neigh = joblib.load(model_path + "knn_7_train_model.m")
+	neigh = joblib.load("model/knn_efd_20_train_model.m")
 	test_knn = neigh.predict(fd_test)
-	clf = joblib.load(model_path + "svm_train_model.m")
+	clf = joblib.load("model/svm_efd_train_model.m")
 	test_svm = clf.predict(fd_test)
 	return test_knn, test_svm
 

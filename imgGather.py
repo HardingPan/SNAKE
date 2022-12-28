@@ -1,6 +1,7 @@
 import cv2 as cv
 import imageProcessing as ip
 import fourierDescriptor as fd
+import efd
 
 
 ###############################################
@@ -13,6 +14,7 @@ def gather(img):
     img_ellipse = ip.skin_ellipse(img_blur)
     img_morphology = ip.morphology(img_ellipse)
     img_fourier, feature = fd.fourierDesciptor(img_morphology)
+    # efd_res = efd.elliptic_fourier_descriptors(img_morphology)
     feature = abs(feature)
 
     return img_fourier, feature
@@ -69,7 +71,8 @@ if __name__ == '__main__':
             while direction != '':
                 cv.imwrite(path + direction + img_path + direction + '_' + str(temp_cnt) + '.png', res)
                 print("第 " + str(temp_cnt) + " 张 " + direction + " 图片 保存成功")
-                with open(path + direction + feature_path + direction + '_' + str(temp_cnt) + '.txt', 'w', encoding='utf-8') as w:
+                with open(path + direction + feature_path + direction + '_' + str(temp_cnt) + '.txt', 'w',
+                          encoding='utf-8') as w:
                     temp = f[1]
                     for j in range(1, len(f)):
                         x_record = int(100 * f[j] / temp)
