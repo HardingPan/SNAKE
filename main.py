@@ -16,7 +16,7 @@ cap.set(cv.CAP_PROP_FRAME_HEIGHT, height)
 
 if __name__ == '__main__':
     # 设置串口
-    ser = serial.Serial("COM3", 9600)
+    ser = serial.Serial('com6', 9600, bytesize=8, stopbits=1, parity='N', timeout=0.5)
     # cnt用于计数结果相同次数
     cnt = 0
     # temp用于记录上次发送的串口信号
@@ -44,10 +44,12 @@ if __name__ == '__main__':
             last_knn = test_knn
         print(cnt)
         s = test_knn[0]
+        ser.write(0x01)
         if cnt > 3 & temp != s:
             temp = s
-            ser.write(str(s).encode('utf-8'))
-            print("发送串口数据  ", s, "\n")
+            if ser.isOpen():
+                ser.write(str(s).encode('utf-8'))
+                print("发送串口数据  ", s, "\n")
 
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
